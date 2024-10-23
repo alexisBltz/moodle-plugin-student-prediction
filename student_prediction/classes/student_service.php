@@ -14,16 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace local_student_prediction;
+
 /**
- * Callback implementations for local_message
+ * Class student_service
  *
- * @package    local_message
+ * @package    local_student_prediction
  * @copyright  2024 YOUR NAME <your@email.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
- function local_message_before_footer(){
-    //\core\notification::add('Hello World', 'danger');
- }
-
- 
+class student_service {
+    public function get_students() {
+        global $DB;
+        return $DB->get_records_sql('
+            SELECT u.id, u.firstname, u.lastname, g.finalgrade
+            FROM {user} u
+            LEFT JOIN {grade_grades} g ON u.id = g.userid
+        ');
+    }
+}
