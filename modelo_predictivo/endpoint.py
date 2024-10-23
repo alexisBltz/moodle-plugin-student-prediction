@@ -34,7 +34,7 @@ def predict():
 
         # Hacer la predicción
         prediction = model.predict(input_data)
-        predictions.append(prediction[0])
+        predictions.append(int(prediction[0]))
 
     return jsonify(predictions)
 
