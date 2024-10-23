@@ -27,9 +27,19 @@ class student_service {
     public function get_students() {
         global $DB;
         return $DB->get_records_sql('
-            SELECT u.id, u.firstname, u.lastname, g.finalgrade
+             SELECT u.id, 
+                   u.firstname, 
+                   u.lastname, 
+                   g.finalgrade,
+                   COUNT(DISTINCT s.id) AS total_assignments_submitted,
+                   COUNT(DISTINCT d.id) AS total_forum_discussions,
+                   SUM(CASE WHEN s.status = "SUBMITTED" THEN 1 ELSE 0 END) AS total_submitted,
+                   AVG(TIMESTAMPDIFF(SECOND, s.timestarted, s.timemodified)) AS avg_submission_time
             FROM {user} u
             LEFT JOIN {grade_grades} g ON u.id = g.userid
+            LEFT JOIN {assign_submission} s ON u.id = s.userid
+            LEFT JOIN {forum_discussions} d ON d.userid = u.id  -- Asegúrate de que la relación es correcta
+            GROUP BY u.id
         ');
     }
 }

@@ -14,28 +14,29 @@ def predict():
     # Obtener datos JSON de la solicitud
     data = request.get_json()
     print(data)
-    # Procesar los datos (asegúrate de que estén en el formato correcto)
+
+    # Procesar los datos
     predictions = []
 
     if 'students' in data:
         students = data['students']
-        predictions = []
-    for student in students:
-        # Manejo de casos donde 'finalgrade' es None
-        finalgrade = student['finalgrade']
-        if finalgrade is None:
-            finalgrade = 0  # o algún valor que tenga sentido en tu contexto
+        for student in students:
+            # Manejo de casos donde 'finalgrade' es None
+            finalgrade = student.get('finalgrade', 0)  # Usa 0 si no hay calificación final
+            total_assignments_submitted = student.get('total_assignments_submitted', 0)
+            total_forum_discussions = student.get('total_forum_discussions', 0)
+            total_submitted = student.get('total_submitted', 0)
+            avg_submission_time = student.get('avg_submission_time', 0)
 
-        # Segunda característica derivada: binaria si la nota es mayor a 70
-        binary_feature = 1 if finalgrade > 70 else 0
+            # Preparar los datos de entrada para la predicción
+            input_data = np.array([[finalgrade, total_assignments_submitted,
+                                    total_forum_discussions, total_submitted,
+                                    avg_submission_time]])
 
-        # Preparar los datos de entrada para la predicción
-        input_data = np.array([[finalgrade, binary_feature]])
+            # Hacer la predicción
+            prediction = model.predict(input_data)
+            predictions.append(int(prediction[0]))
 
-        # Hacer la predicción
-        prediction = model.predict(input_data)
-        predictions.append(int(prediction[0]))
-        print(predictions)
     return jsonify(predictions)
 
 if __name__ == '__main__':

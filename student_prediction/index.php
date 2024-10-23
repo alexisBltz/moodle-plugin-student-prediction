@@ -50,6 +50,10 @@ foreach ($students as $student) {
         'firstname' => $student->firstname,
         'lastname' => $student->lastname,
         'finalgrade' => !is_null($student->finalgrade) ? round($student->finalgrade, 2) : null,
+        'total_assignments_submitted' => $student->total_assignments_submitted, // Nuevo campo
+        'total_forum_discussions' => $student->total_forum_discussions, // Nuevo campo
+        'total_submitted' => $student->total_submitted, // Nuevo campo
+        'avg_submission_time' => intval($student->avg_submission_time) // Nuevo campo
     ];
 }
 
@@ -69,6 +73,10 @@ foreach ($students as $index => $student) {
         'firstname' => $student->firstname,
         'lastname' => $student->lastname,
         'finalgrade' => !is_null($student->finalgrade) ? round($student->finalgrade, 2) : 'Sin nota',
+        'total_assignments_submitted' => $student->total_assignments_submitted, 
+        'total_forum_discussions' => $student->total_forum_discussions, 
+        'total_submitted' => $student->total_submitted, 
+        'avg_submission_time' => intval($student->avg_submission_time), 
         'prediction' => isset($predictions[$index]) ? $predictions[$index] : null
     ];
 }
